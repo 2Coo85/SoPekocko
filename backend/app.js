@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+const path = require('path');
 
 const sauceRoutes = require('./routes/sauces');
 const userRoutes = require('./routes/user');
@@ -7,7 +9,7 @@ const userRoutes = require('./routes/user');
 const app = express();
 
 mongoose.connect(
-    'mongodb+srv://tc3085:QgJS2oUPE7bXBwrg@cluster0.zuqab.mongodb.net/test?retryWrites=true&w=majority',
+    'mongodb+srv://tc3085:QgJS2oUPE7bXBwrg@cluster0.zuqab.mongodb.net/run-script-os?retryWrites=true&w=majority',
     { useNewUrlParser: true })
     .then(() => {
       console.log('Successfully connected to MongoDB Atlas!');
@@ -23,6 +25,9 @@ app.use((req, res, next) => {
    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
    next();
 });
+
+app.use(bodyParser.json());
+app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
