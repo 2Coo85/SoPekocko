@@ -1,6 +1,6 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 const path = require('path');
 
 const sauceRoutes = require('./routes/sauces');
@@ -8,8 +8,7 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-mongoose.connect(
-    'mongodb+srv://tc3085:QgJS2oUPE7bXBwrg@cluster0.zuqab.mongodb.net/run-script-os?retryWrites=true&w=majority',
+mongoose.connect( 'mongodb+srv://tc3085:QgJS2oUPE7bXBwrg@cluster0.zuqab.mongodb.net/run-script-os?retryWrites=true&w=majority',
     { useNewUrlParser: true })
     .then(() => {
       console.log('Successfully connected to MongoDB Atlas!');
@@ -26,8 +25,8 @@ app.use((req, res, next) => {
    next();
 });
 
+app.use('/images', express.static(path.join(__dirname, 'images')));
 app.use(bodyParser.json());
-app.use('/images', express.static(path.join(__dirname, 'images')))
 
 app.use('/api/sauces', sauceRoutes);
 app.use('/api/auth', userRoutes);
