@@ -133,35 +133,8 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 exports.likeSauce = (req, res, next) => {
-    Sauce.findOne({_id: req.params.id}).then(sauce => {
-        if (req.body.like == 1) {
-            sauce.usersLiked.push(req.body.userId)
-            sauce.likes += req.body.like
-        } else if (req.body.like == 0 && sauce.usersLiked.includes(req.body.userId)) {
-            sauce.usersLiked.remove(req.body.userId)
-            sauce.likes -= 1
-        } else if (req.body.like == -1) {
-            sauce.usersDisliked.push(req.body.userId)
-            sauce.dislikes += 1
-        } else if (req.body.like == 0 && sauce.usersDisliked.includes(req.body.userId)) {
-            sauce.usersDisliked.remove(req.body.userId)
-            sauce.dislikes -= 1
-        }
-        sauce.save().then(
-            () => {
-                res.status(200).json({
-                    message: "Sauce Like Updated!"
-                });
-            }
-        ).catch(
-            (error) => {
-                res.status(400).json({
-                    error: error
-                });
-            }
-        );
-    })
-    /*let sauce = new Sauce({_id: req.params.id});
+    //haven't tested this new part yet
+    let sauce = new Sauce({_id: req.params.id});
     if (req.body.like == 1){
        sauce.likes += req.body.like;
        sauce.usersLiked.push(req.body.userId);
@@ -193,7 +166,7 @@ exports.likeSauce = (req, res, next) => {
                 error: error
             });
         }
-    );*/
+    );*
 };
 
 exports.getAllSauces = (req, res, next) => {
