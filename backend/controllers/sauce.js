@@ -51,8 +51,8 @@ exports.getOneSauce = (req, res, next) => {
 
 exports.updateSauce = (req, res, next) => {
     let sauce = new Sauce({_id: req.params._id});
-    const url = req.protocol + '://' + req.get('host');
     if (req.file) {
+        const url = req.protocol + '://' + req.get('host');
         req.body.sauce = JSON.parse(req.body.sauce);
         sauce = {
             imageUrl: url + '/images/' + req.file.filename,
@@ -133,40 +133,35 @@ exports.deleteSauce = (req, res, next) => {
 };
 
 exports.likeSauce = (req, res, next) => {
-    //haven't tested this new part yet
-    let sauce = new Sauce({_id: req.params.id});
-    if (req.body.like == 1){
-       sauce.likes += req.body.like;
-       sauce.usersLiked.push(req.body.userId);
-    } else if(req.body.like == 0 && _sauce.usersDisliked.includes(res.body.userId)) {
-        _sauce.usersDisliked.remove(req.body.userId);
-        _sauce.dislikes -= 1;
-    } else if (req.body.like == 0 && _sauce.usersLiked.includes(res.body.userId)) {
-        _sauce.usersLiked.remove(req.body.userId);
-        _sauce.likes -= 1;
-    }else {
-        sauce.dislikes += 1;
-        sauce.usersDisliked.push(req.body.userId);
-    }
-    sauce = {
-        likes: sauce.likes,
-        usersLiked: sauce.usersLiked,
-        dislikes: sauce.dislikes,
-        usersDisliked: sauce.usersDisliked
-    }
-    Sauce.updateOne({_id: req.params.id}, sauce).then(
-        () => {
-            res.status(201).json({
-                message: "like updated"
-            });
+   Sauce.findOne({_id: req.params.id}).then((sauce) => {
+        if (req.body.like == 1) {
+            sauce.usersLiked.push(req.body.userId)
+            sauce.likes += req.body.like
+        } else if (req.body.like == 0 && sauce.usersLiked.includes(req.body.userId)) {
+            sauce.usersLiked.remove(req.body.userId)
+            sauce.likes -= 1
+        } else if (req.body.like == -1) {
+            sauce.usersDisliked.push(req.body.userId)
+            sauce.dislikes += 1
+        } else if (req.body.like == 0 && sauce.usersDisliked.includes(req.body.userId)) {
+            sauce.usersDisliked.remove(req.body.userId)
+            sauce.dislikes -= 1
         }
-    ).catch(
-        (error) => {
-            res.status(400).json({
-                error: error
-            });
-        }
-    );*
+        sauce.save().then(
+            () => {
+                res.status(200).json({
+                    message: "Sauce Like Updated!"
+                });
+            }
+        ).catch(
+            (error) => {
+                res.status(400).json({
+                    error: error
+                });
+            }
+        );
+    });
+    
 };
 
 exports.getAllSauces = (req, res, next) => {
