@@ -8,8 +8,8 @@ const userRoutes = require('./routes/user');
 
 const app = express();
 
-mongoose.connect( 'mongodb+srv://tc3085:QgJS2oUPE7bXBwrg@cluster0.zuqab.mongodb.net/run-script-os?retryWrites=true&w=majority',
-    { useNewUrlParser: true })
+mongoose.connect(  'mongodb+srv://tc3085:S6vK5mmykEizcnP7@cluster0.zuqab.mongodb.net/start?retryWrites=true&w=majority',
+  { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
       console.log('Successfully connected to MongoDB Atlas!');
     })
